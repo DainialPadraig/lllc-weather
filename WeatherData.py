@@ -11,6 +11,7 @@
 #   License:
 
 
+from datetime import datetime, date, time
 from MesoPy import Meso
 
 #TODO-Get rid of these global constants and variables
@@ -27,6 +28,38 @@ def display_latest(station_id):
                    units='precip|in,speed|mph,temp|F')
     print
 
+
+def display_temp_month(station_id):
+    """Display daily high, low, and average temperature for the month at
+       station_id, daily high, low, and average temperature for the same month
+       last year at station_id, and average high, low, and average temperature
+       for the month from the National Weather Service."""
+    print 'Temperatures for this month:'
+    print '----------------------------'
+    print 
+    
+
+def display_temp_ytd(station_id):
+    """Display monthly high, low, and average temperature for the year to date
+       at station_id, monthly high, low, and average temperature for last year
+       at station_id, and average monthly high, low, and average temperature
+       for the year from the National Weather Service."""
+    print 'Monthly temperatures since the start of the year:'
+    print '-------------------------------------------------'
+    print
+    
+
+def display_precip_month(station_id):
+    """Display daily rainfall for the month at station_id, daily rainfall for
+       the same month last year at station_id, and average rainfall for the
+       month from the National Weather Service."""
+    print 'Total rainfall for this month:'
+    print '------------------------------'
+    print m.precip(stid=station_id,
+                   start='201806010000', end='201806272359',
+                   units='precip|in')
+    print
+    
 
 def display_precip_ytd(station_id):
     """Display total rainfall since Jan 1 at station_id.""" 
@@ -45,6 +78,9 @@ def main():
     LLLC_STID = 'e8967'
 
     display_latest(LLLC_STID)
+    display_temp_month(LLLC_STID)
+    display_temp_ytd(LLLC_STID)
+    display_precip_month(LLLC_STID)
     display_precip_ytd(LLLC_STID)
 
 if __name__ == '__main__':
