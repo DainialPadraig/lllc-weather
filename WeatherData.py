@@ -16,7 +16,7 @@ from MesoPy import Meso
 
 #TODO-Get rid of these global constants and variables
 MESOWEST_TOKEN = '0ee93b568404435a9f98ead284f5fc9c'    
-m = Meso(token=MESOWEST_TOKEN)
+_m = Meso(token=MESOWEST_TOKEN)
 
 
 def display_latest(station_id):
@@ -24,8 +24,27 @@ def display_latest(station_id):
     
     print 'Most recent weather readings:'
     print '-----------------------------'
-    print m.latest(stid=station_id,
-                   units='precip|in,speed|mph,temp|F')
+    latest_reading = _m.latest(stid=station_id,
+                               units='precip|in,speed|mph,temp|F')
+    print ('Temperature: '
+           + str(latest_reading['STATION'][0]['OBSERVATIONS']
+                 ['air_temp_value_1']['value'])
+           + ' deg F')
+    print ('Rainfall today: '        
+           + str(latest_reading['STATION'][0]['OBSERVATIONS']
+                 ['precip_accum_since_local_midnight_value_1']['value'])
+           + ' inches')
+    print ('Wind speed: '
+           + str(latest_reading['STATION'][0]['OBSERVATIONS']
+                 ['wind_speed_value_1']['value'])
+           + ' mph')
+    print ('Wind cardinal direction: '
+           + str(latest_reading['STATION'][0]['OBSERVATIONS']
+                 ['wind_cardinal_direction_value_1d']['value']))           
+    print ('Wind direction: '
+           + str(latest_reading['STATION'][0]['OBSERVATIONS']
+                 ['wind_direction_value_1']['value'])
+           + ' degrees')           
     print
 
 
@@ -36,7 +55,7 @@ def display_temp_month(station_id):
        for the month from the National Weather Service."""
     print 'Temperatures for this month:'
     print '----------------------------'
-    print 
+    print
     
 
 def display_temp_ytd(station_id):
@@ -55,9 +74,15 @@ def display_precip_month(station_id):
        month from the National Weather Service."""
     print 'Total rainfall for this month:'
     print '------------------------------'
-    print m.precip(stid=station_id,
-                   start='201806010000', end='201806272359',
-                   units='precip|in')
+    dt = datetime.now()
+    precip_mtd = _m.precip(stid=station_id,
+                           start=(dt.strftime('%Y%m') + '010000'),
+                           end=dt.strftime('%Y%m%d%H%M'),
+                           units='precip|in')
+    print('Rainfall this month at the Living Lab: '
+           + str(precip_mtd['STATION'][0]['OBSERVATIONS']
+                 ['total_precip_value_1'])
+           + ' inches')
     print
     
 
@@ -65,9 +90,13 @@ def display_precip_ytd(station_id):
     """Display total rainfall since Jan 1 at station_id.""" 
     print 'Total rainfall since the start of the year:'
     print '-------------------------------------------'
-    print m.precip(stid=station_id,
-                   start='201801010000', end='201806232359',
-                   units='precip|in')
+    precip = _m.precip(stid=station_id,
+                       start=(datetime.now().strftime('%Y') + '01010000'),
+                       end=datetime.now().strftime('%Y%m%d%H%M'),
+                       units='precip|in')
+    print ('Living Lab and Learning Center: '
+           + str(precip['STATION'][0]['OBSERVATIONS']['total_precip_value_1'])
+           + ' inches')
     print
     
 
