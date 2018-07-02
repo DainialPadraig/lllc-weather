@@ -55,16 +55,63 @@ def display_temp_month(station_id):
        for the month from the National Weather Service."""
     print 'Temperatures for this month:'
     print '----------------------------'
+    dt = datetime.now()
+    stats_mtd = _m.time_stats(stid=station_id,
+                              start=(dt.strftime('%Y%m') + '010000'),
+                              end=dt.strftime('%Y%m%d%H%M'),
+                              obtimezone='local',
+                              units='temp|F',
+                              type='all',
+                              vars='air_temp')
+    print ('Average: '
+           + str(stats_mtd['STATION'][0]['STATISTICS']
+                 ['air_temp_set_1']['average'])
+           + ' deg F')
+    print ('Maximum: '
+           + str(stats_mtd['STATION'][0]['STATISTICS']
+                 ['air_temp_set_1']['maximum'])
+           + ' deg F')
+    print ('Median: '
+           + str(stats_mtd['STATION'][0]['STATISTICS']
+                 ['air_temp_set_1']['median'])
+           + ' deg F')
+    print ('Minimum: '
+           + str(stats_mtd['STATION'][0]['STATISTICS']
+                 ['air_temp_set_1']['minimum'])
+           + ' deg F')
     print
-    
 
 def display_temp_ytd(station_id):
     """Display monthly high, low, and average temperature for the year to date
        at station_id, monthly high, low, and average temperature for last year
        at station_id, and average monthly high, low, and average temperature
        for the year from the National Weather Service."""
-    print 'Monthly temperatures since the start of the year:'
+    print 'Temperatures since the start of the year:'
     print '-------------------------------------------------'
+    dt = datetime.now()
+    stats_ytd = _m.time_stats(stid=station_id,
+                              start=(dt.strftime('%Y') + '01010000'),
+                              end=dt.strftime('%Y%m%d%H%M'),
+                              obtimezone='local',
+                              units='temp|F',
+                              type='all',
+                              vars='air_temp')
+    print ('Average: '
+           + str(stats_ytd['STATION'][0]['STATISTICS']
+                 ['air_temp_set_1']['average'])
+           + ' deg F')
+    print ('Maximum: '
+           + str(stats_ytd['STATION'][0]['STATISTICS']
+                 ['air_temp_set_1']['maximum'])
+           + ' deg F')
+    print ('Median: '
+           + str(stats_ytd['STATION'][0]['STATISTICS']
+                 ['air_temp_set_1']['median'])
+           + ' deg F')
+    print ('Minimum: '
+           + str(stats_ytd['STATION'][0]['STATISTICS']
+                 ['air_temp_set_1']['minimum'])
+           + ' deg F')
     print
     
 
@@ -78,6 +125,7 @@ def display_precip_month(station_id):
     precip_mtd = _m.precip(stid=station_id,
                            start=(dt.strftime('%Y%m') + '010000'),
                            end=dt.strftime('%Y%m%d%H%M'),
+                           obtimezone='local',
                            units='precip|in')
     print('Rainfall this month at the Living Lab: '
            + str(precip_mtd['STATION'][0]['OBSERVATIONS']
@@ -93,6 +141,7 @@ def display_precip_ytd(station_id):
     precip = _m.precip(stid=station_id,
                        start=(datetime.now().strftime('%Y') + '01010000'),
                        end=datetime.now().strftime('%Y%m%d%H%M'),
+                       obtimezone='local',
                        units='precip|in')
     print ('Living Lab and Learning Center: '
            + str(precip['STATION'][0]['OBSERVATIONS']['total_precip_value_1'])
