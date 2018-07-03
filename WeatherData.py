@@ -115,22 +115,47 @@ def display_temp_ytd(station_id):
     print
     
 
-def display_precip_month(station_id):
+def display_precip_month(station_id, nws_stid):
     """Display daily rainfall for the month at station_id, daily rainfall for
        the same month last year at station_id, and average rainfall for the
        month from the National Weather Service."""
-    print 'Total rainfall for this month:'
-    print '------------------------------'
+    print 'Total monthly rainfall:'
+    print '-----------------------'
     dt = datetime.now()
+    # Note that it should be possible to have multiple stids in the call to the
+    # MesoPy API; however, I found the order of the returned lists was not
+    # consistent, so I am limiting the call to one id at a time.
     precip_mtd = _m.precip(stid=station_id,
                            start=(dt.strftime('%Y%m') + '010000'),
                            end=dt.strftime('%Y%m%d%H%M'),
                            obtimezone='local',
                            units='precip|in')
-    print('Rainfall this month at the Living Lab: '
-           + str(precip_mtd['STATION'][0]['OBSERVATIONS']
-                 ['total_precip_value_1'])
-           + ' inches')
+    print('Rainfall for ' + dt.strftime('%B %Y') + ' at '
+          + str(precip_mtd['STATION'][0]['NAME']) + ': '
+          + str(precip_mtd['STATION'][0]['OBSERVATIONS']
+                ['total_precip_value_1'])
+          + ' inches')
+    last_year = dt.year - 1
+    precip_mtd = _m.precip(stid=station_id,
+                           start=(str(last_year) + dt.strftime('%m') + '010000'),
+                           end=(str(last_year) + dt.strftime('%m%d%H%M')),
+                           obtimezone='local',
+                           units='precip|in')
+    print('Rainfall for ' + dt.strftime('%B ') + str(last_year) + ' at '
+          + str(precip_mtd['STATION'][0]['NAME']) + ': '
+          + str(precip_mtd['STATION'][0]['OBSERVATIONS']
+                ['total_precip_value_1'])
+          + ' inches')
+    precip_mtd = _m.precip(stid=nws_stid,
+                           start=(dt.strftime('%Y%m') + '010000'),
+                           end=dt.strftime('%Y%m%d%H%M'),
+                           obtimezone='local',
+                           units='precip|in')
+    print('Rainfall for ' + dt.strftime('%B %Y') + ' at '
+          + str(precip_mtd['STATION'][0]['NAME']) + ': '
+          + str(precip_mtd['STATION'][0]['OBSERVATIONS']
+                ['total_precip_value_1'])
+          + ' inches')
     print
     
 
@@ -154,11 +179,12 @@ def main():
     """Main function for WeatherData."""
 
     LLLC_STID = 'e8967'
+    NWS_STID = 'ktus'
 
     display_latest(LLLC_STID)
     display_temp_month(LLLC_STID)
     display_temp_ytd(LLLC_STID)
-    display_precip_month(LLLC_STID)
+    display_precip_month(LLLC_STID, NWS_STID)
     display_precip_ytd(LLLC_STID)
 
 if __name__ == '__main__':
