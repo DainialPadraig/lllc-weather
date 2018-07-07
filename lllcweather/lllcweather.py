@@ -1,4 +1,4 @@
-# WeatherData
+# lllcweather
 #   Retrives data from the MesoWest repository for the Living Lab and Learning
 #   Center weather station and displays it on a Raspberry Pi touchscreen.
 #   Hardware: Raspberry Pi 3
@@ -8,7 +8,7 @@
 #             MesoPy 2.0.3
 #             Kivy
 #   Program by Dan Stormont
-#   License:
+#   License: MIT
 
 
 from datetime import datetime, date, time
