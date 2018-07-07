@@ -13,6 +13,7 @@
 
 from datetime import datetime, date, time
 from MesoPy import Meso
+from pprint import pprint
 
 #TODO-Get rid of these global constants and variables
 MESOWEST_TOKEN = '0ee93b568404435a9f98ead284f5fc9c'    
