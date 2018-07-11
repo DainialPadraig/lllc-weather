@@ -24,7 +24,15 @@ def get_precip_norms(stid):
     
     url = BASE_URL + '1981-2010' + '/products/precipitation/mly-prcp-normal.txt'
     r = requests.get(url)
-    return r.text
+    if (r.status_code == 200):
+        for line in r.text.splitlines():
+            parse_line = line.split()
+            if parse_line[0] == stid:
+                for norm in range(1, 13):
+                    parse_line[norm] = float(parse_line[norm][:-1]) / 100
+                return parse_line
+    else:
+        print 'ERROR: No data returned from server.'
 
 
 def main():
